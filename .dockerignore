@@ -1,0 +1,12 @@
+node_modules/
+**/node_modules/
+.env
+**/.env
+.git/
+frontend/dist/
+dist/
+*.log
+*.xlsx
+~$*
+.DS_Store
+Thumbs.db

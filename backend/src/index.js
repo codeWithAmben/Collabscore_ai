@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -9,21 +12,31 @@ import classroomRoutes from './routes/classroomRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
 import { isGoogleOAuthConfigured } from './services/googleService.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const FRONTEND_DIST_DIR = path.resolve(__dirname, '../../frontend/dist');
+const FRONTEND_INDEX_HTML = path.join(FRONTEND_DIST_DIR, 'index.html');
+
 const app = express();
 
 app.set('trust proxy', 1);
 
 app.use(
-  cors({
-    origin(origin, callback) {
-      if (!origin) return callback(null, true);
-      const cleanOrigin = origin.replace(/\/+$/, '');
-      if (config.allowedOrigins.includes(cleanOrigin)) {
-        return callback(null, true);
-      }
-      return callback(new Error(`Origin ${origin} not permitted by CORS`));
-    },
-    credentials: true
+  cors((req, callback) => {
+    const origin = req.header('Origin');
+    if (!origin) {
+      return callback(null, { origin: true, credentials: true });
+    }
+    const cleanOrigin = origin.replace(/\/+$/, '');
+    const hostHeader = req.get('host');
+    const sameOrigin =
+      Boolean(hostHeader) &&
+      (cleanOrigin === `https://${hostHeader}` || cleanOrigin === `http://${hostHeader}`);
+
+    if (sameOrigin || config.allowedOrigins.includes(cleanOrigin)) {
+      return callback(null, { origin: true, credentials: true });
+    }
+    return callback(null, { origin: false });
   })
 );
 
@@ -46,9 +59,20 @@ app.use('/api/auth', authRoutes);
 app.use('/api/classroom', classroomRoutes);
 app.use('/api/projects', projectRoutes);
 
-app.use((req, res) => {
+app.use('/api', (req, res) => {
   res.status(404).json({ error: `Route not found: ${req.method} ${req.originalUrl}` });
 });
+
+if (fs.existsSync(FRONTEND_INDEX_HTML)) {
+  app.use(express.static(FRONTEND_DIST_DIR));
+  app.get('*', (req, res) => {
+    res.sendFile(FRONTEND_INDEX_HTML);
+  });
+} else {
+  app.use((req, res) => {
+    res.status(404).json({ error: `Route not found: ${req.method} ${req.originalUrl}` });
+  });
+}
 
 app.use((err, req, res, next) => {
   const status = err.status || 500;
@@ -64,9 +88,9 @@ async function startServer() {
   await initDatabase();
   await ensureDemoSeedData();
 
-  app.listen(config.port, () => {
+  app.listen(config.port, '0.0.0.0', () => {
     console.log(
-      `[Server] CollabScore AI API listening on port ${config.port} (DB: ${getDbMode()}, AI: ${config.geminiModel})`
+      `[Server] CollabScore AI API listening on 0.0.0.0:${config.port} (DB: ${getDbMode()}, AI: ${config.geminiModel})`
     );
   });
 }

@@ -39,7 +39,7 @@ export default function Header({
             <div className="flex items-center gap-2 text-[11px] text-slate-500">
               <span className="inline-flex items-center gap-1">
                 <Database className="h-3 w-3 text-emerald-600" />
-                {authConfig?.dbMode === 'mysql' ? 'Laragon MySQL' : 'Interactive Demo Store'}
+                {authConfig?.dbMode === 'mysql' ? 'MySQL Connected' : 'Interactive Demo Store'}
               </span>
               <span>·</span>
               <span className="inline-flex items-center gap-1 text-indigo-600 font-medium">

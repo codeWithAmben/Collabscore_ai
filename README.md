@@ -83,3 +83,16 @@ Open `http://localhost:5173` and click **"Load Interactive Demo Workspace"** (or
    - On `collabscore-ai-api`: set `FRONTEND_URL` (your deployed static site URL), `DATABASE_URL` (managed MySQL / PlanetScale / RDS URL), `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI` (`https://<your-api>.onrender.com/api/auth/google/callback`), and `GEMINI_API_KEY`.
    - On `collabscore-ai-web`: set `VITE_API_URL` (`https://<your-api>.onrender.com`) and your `VITE_GOOGLE_*` Picker keys.
 3. Add your Render URLs to Google Cloud Console's Authorized Origins and Redirect URIs.
+
+---
+
+## 6. Railway Deployment (`Dockerfile` + `railway.json`)
+
+1. Push your latest commits to GitHub and create a **New Project → Deploy from GitHub Repo** in Railway.
+2. Railway automatically builds via [Dockerfile](file:///c:/Collabscore_ai/Dockerfile) and [railway.json](file:///c:/Collabscore_ai/railway.json), serving both the React SPA and the Express API from one service (`GET /api/health` healthcheck).
+3. Add a **MySQL** service in the same Railway project, then on your app service reference its connection variables (Railway injects `MYSQL_URL` / `MYSQLHOST` / `MYSQLUSER` / `MYSQLPASSWORD` / `MYSQLDATABASE`, or you can set `DATABASE_URL=${{MySQL.MYSQL_URL}}`).
+4. Set optional/production environment variables on your Railway app service:
+   - `JWT_SECRET` and `TOKEN_ENCRYPTION_KEY` (strong random strings)
+   - `GEMINI_API_KEY` and `GEMINI_MODEL=gemini-3.8-flash`
+   - *(Optional for live Google Login)* `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `GOOGLE_REDIRECT_URI=https://<your-domain>.up.railway.app/api/auth/google/callback`
+5. Under **Settings → Networking**, click **Generate Domain** (or set `PORT` if overridden). Railway automatically injects `RAILWAY_PUBLIC_DOMAIN`, which CollabScore AI uses for CORS and redirects.

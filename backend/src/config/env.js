@@ -30,31 +30,87 @@ function parseDatabaseUrl(rawUrl) {
   }
 }
 
-const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
-const parsedOrigins = frontendUrl
-  .split(',')
-  .map((item) => item.trim().replace(/\/+$/, ''))
-  .filter(Boolean);
+export function resolveDbConfig(env = process.env) {
+  const rawUrl = env.DATABASE_URL || env.MYSQL_URL || env.MYSQL_PUBLIC_URL || '';
+  const hasIndividualMysqlVars = Boolean(env.MYSQLHOST || env.MYSQL_HOST);
+  const hasExplicitDbConfig = Boolean(rawUrl || hasIndividualMysqlVars);
 
-const defaultDevOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
-const allowedOrigins = Array.from(new Set([...parsedOrigins, ...defaultDevOrigins]));
+  let db;
+  if (rawUrl) {
+    db = parseDatabaseUrl(rawUrl);
+  } else if (hasIndividualMysqlVars) {
+    db = {
+      host: env.MYSQLHOST || env.MYSQL_HOST || '127.0.0.1',
+      port: Number(env.MYSQLPORT || env.MYSQL_PORT) || 3306,
+      user: env.MYSQLUSER || env.MYSQL_USER || 'root',
+      password: env.MYSQLPASSWORD ?? env.MYSQL_ROOT_PASSWORD ?? env.MYSQL_PASSWORD ?? '',
+      database: env.MYSQLDATABASE || env.MYSQL_DATABASE || 'railway'
+    };
+  } else {
+    db = parseDatabaseUrl(DEFAULT_DATABASE_URL);
+  }
 
-export const config = {
-  nodeEnv: process.env.NODE_ENV || 'development',
-  isProduction: process.env.NODE_ENV === 'production',
-  port: Number(process.env.PORT) || 5000,
-  frontendUrl: parsedOrigins[0] || 'http://localhost:5173',
-  allowedOrigins,
-  databaseUrl: process.env.DATABASE_URL || DEFAULT_DATABASE_URL,
-  db: parseDatabaseUrl(process.env.DATABASE_URL),
-  allowMemoryFallback: process.env.ALLOW_MEMORY_FALLBACK !== 'false',
-  jwtSecret: process.env.JWT_SECRET || 'collabscore-dev-jwt-secret-change-in-production',
-  tokenEncryptionKey:
-    process.env.TOKEN_ENCRYPTION_KEY || 'collabscore-dev-aes-key-32chars!',
-  googleClientId: process.env.GOOGLE_CLIENT_ID || '',
-  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-  googleRedirectUri:
-    process.env.GOOGLE_REDIRECT_URI || 'http://localhost:5000/api/auth/google/callback',
-  geminiApiKey: process.env.GEMINI_API_KEY || '',
-  geminiModel: process.env.GEMINI_MODEL || 'gemini-3.8-flash'
-};
+  const ssl =
+    env.MYSQL_SSL === 'true' || /[?&]ssl(-mode)?=(true|required)/i.test(rawUrl);
+
+  return {
+    databaseUrl: rawUrl || DEFAULT_DATABASE_URL,
+    db: { ...db, ssl },
+    hasExplicitDbConfig
+  };
+}
+
+export function buildConfig(env = process.env) {
+  const railwayPublicDomain = (env.RAILWAY_PUBLIC_DOMAIN || '')
+    .trim()
+    .replace(/^https?:\/\//i, '')
+    .replace(/\/+$/, '');
+  const railwayOrigin = railwayPublicDomain ? `https://${railwayPublicDomain}` : '';
+  const isRailway = Boolean(
+    env.RAILWAY_ENVIRONMENT || env.RAILWAY_PROJECT_ID || railwayPublicDomain
+  );
+
+  const frontendUrlInput = env.FRONTEND_URL || railwayOrigin || 'http://localhost:5173';
+  const parsedOrigins = frontendUrlInput
+    .split(',')
+    .map((item) => item.trim().replace(/\/+$/, ''))
+    .filter(Boolean);
+
+  const defaultDevOrigins = ['http://localhost:5173', 'http://127.0.0.1:5173'];
+  const allowedOrigins = Array.from(
+    new Set([
+      ...parsedOrigins,
+      ...(railwayOrigin ? [railwayOrigin] : []),
+      ...defaultDevOrigins
+    ])
+  );
+
+  const { databaseUrl, db, hasExplicitDbConfig } = resolveDbConfig(env);
+
+  return {
+    nodeEnv: env.NODE_ENV || 'development',
+    isProduction: env.NODE_ENV === 'production',
+    isRailway,
+    port: Number(env.PORT) || 5000,
+    frontendUrl: parsedOrigins[0] || railwayOrigin || 'http://localhost:5173',
+    allowedOrigins,
+    databaseUrl,
+    db,
+    hasExplicitDbConfig,
+    allowMemoryFallback: env.ALLOW_MEMORY_FALLBACK !== 'false',
+    jwtSecret: env.JWT_SECRET || 'collabscore-dev-jwt-secret-change-in-production',
+    tokenEncryptionKey:
+      env.TOKEN_ENCRYPTION_KEY || 'collabscore-dev-aes-key-32chars!',
+    googleClientId: env.GOOGLE_CLIENT_ID || '',
+    googleClientSecret: env.GOOGLE_CLIENT_SECRET || '',
+    googleRedirectUri:
+      env.GOOGLE_REDIRECT_URI ||
+      (railwayOrigin
+        ? `${railwayOrigin}/api/auth/google/callback`
+        : 'http://localhost:5000/api/auth/google/callback'),
+    geminiApiKey: env.GEMINI_API_KEY || '',
+    geminiModel: env.GEMINI_MODEL || 'gemini-3.8-flash'
+  };
+}
+
+export const config = buildConfig(process.env);
