@@ -77,7 +77,7 @@ export default function LandingPage({
           <div className="lg:col-span-6">
             <div className="inline-flex items-center gap-2 rounded-full border border-indigo-200 bg-indigo-50 px-3.5 py-1.5 text-xs font-semibold text-indigo-700">
               <Sparkles className="h-3.5 w-3.5" />
-              Powered by Gemini 3.8 Flash &amp; Drive v3 Telemetry
+              Drive v3 Revision Telemetry &amp; Peer Accountability
             </div>
 
             <h1 className="mt-5 font-display text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
@@ -265,7 +265,7 @@ export default function LandingPage({
               Anti-Bias 75/25 AI Scoring
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-slate-600">
-              Gemini 3.8 Flash weighs objective Drive authorship at 75% and peer check-ins at 25%,
+              CollabScore weighs objective Drive authorship at 75% and peer check-ins at 25%,
               neutralizing popularity bias and inflated self-ratings with structured evidence bullets.
             </p>
           </div>

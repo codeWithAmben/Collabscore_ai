@@ -60,13 +60,9 @@ export default function ContributionDashboard({
     try {
       const res = await api.analyzeProject(project.id, forceRefresh);
       onProjectUpdated(res.project);
-      setLastRunMeta({ cached: res.cached, fallbackReason: res.fallbackReason });
+      setLastRunMeta({ cached: res.cached });
       onShowToast(
-        res.cached
-          ? 'Loaded cached Gemini 3.8 Flash evaluation.'
-          : res.fallbackReason
-            ? 'Audit completed using local 75/25 heuristic fallback (no live Gemini key).'
-            : 'Live Gemini 3.8 Flash contribution audit complete!',
+        res.cached ? 'Loaded cached contribution audit.' : 'Contribution audit complete!',
         'success'
       );
     } catch (error) {
@@ -118,8 +114,7 @@ export default function ContributionDashboard({
               {project.latest_evaluation && (
                 <span className="inline-flex items-center gap-1 rounded-full border border-indigo-200 bg-indigo-50 px-2.5 py-0.5 text-[11px] font-semibold text-indigo-700">
                   <Sparkles className="h-3 w-3" />
-                  {project.latest_evaluation.model_used}
-                  {lastRunMeta?.cached === false ? ' · Fresh Run' : ' · Cached'}
+                  {lastRunMeta?.cached === false ? 'Fresh Audit' : 'Cached Audit'}
                 </span>
               )}
             </div>
@@ -140,10 +135,10 @@ export default function ContributionDashboard({
               <RefreshCw className="h-4 w-4" />
             )}
             {analyzing
-              ? 'Running Gemini 3.8 Flash Audit...'
+              ? 'Running Contribution Audit...'
               : evaluation
-                ? 'Re-run Live AI Audit'
-                : 'Run Gemini 3.8 Flash Audit'}
+                ? 'Re-run Audit'
+                : 'Run Contribution Audit'}
           </button>
         </div>
 
@@ -205,7 +200,7 @@ export default function ContributionDashboard({
             Ready to Run Your First AI Contribution Audit
           </h3>
           <p className="mx-auto mt-1 max-w-md text-xs text-slate-600">
-            Attach Google Docs/Slides above and click &ldquo;Run Gemini 3.8 Flash Audit&rdquo; to
+            Attach Google Docs/Slides above and click &ldquo;Run Contribution Audit&rdquo; to
             generate individual contribution shares and evidence notes.
           </p>
         </div>
@@ -413,7 +408,7 @@ export default function ContributionDashboard({
 
                     <div className="mt-4">
                       <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
-                        Gemini 3.8 Flash Evidence
+                        Contribution Evidence
                       </div>
                       <ul className="mt-2 space-y-1.5">
                         {(member.ai_evidence_notes || []).map((note, nIdx) => (

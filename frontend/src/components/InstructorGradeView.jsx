@@ -87,14 +87,14 @@ export default function InstructorGradeView({
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold text-indigo-200">
               <Sparkles className="h-3.5 w-3.5" />
-              Instructor Fairness Audit Summary ({evaluation?.model_used || 'gemini-3.8-flash'})
+              Instructor Fairness Audit Summary
             </div>
             <h2 className="mt-3 font-display text-lg font-bold">
               Evidence-Backed Dispute Resolution Note
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-slate-200">
               {evalJson?.instructor_audit_summary ||
-                'Run the Gemini 3.8 Flash contribution audit below to generate an evidence-backed grading summary.'}
+                'Run the contribution audit below to generate an evidence-backed grading summary.'}
             </p>
           </div>
 

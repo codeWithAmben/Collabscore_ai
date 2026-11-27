@@ -4,7 +4,6 @@ import {
   GraduationCap,
   LogOut,
   ShieldCheck,
-  Sparkles,
   UserCheck
 } from 'lucide-react';
 
@@ -40,11 +39,6 @@ export default function Header({
               <span className="inline-flex items-center gap-1">
                 <Database className="h-3 w-3 text-emerald-600" />
                 {authConfig?.dbMode === 'mysql' ? 'MySQL Connected' : 'Interactive Demo Store'}
-              </span>
-              <span>·</span>
-              <span className="inline-flex items-center gap-1 text-indigo-600 font-medium">
-                <Sparkles className="h-3 w-3" />
-                {authConfig?.geminiModel || 'gemini-3.8-flash'}
               </span>
             </div>
           </div>
