@@ -103,10 +103,10 @@ export default function ContributionDashboard({
   const fairnessScore = evaluation?.overall_fairness_score ?? null;
 
   return (
-    <section className="space-y-6">
-      <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
+    <section className="space-y-4 sm:space-y-6">
+      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs sm:p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
+          <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="font-display text-lg font-bold text-slate-900">
                 AI Contribution Breakdown
@@ -127,7 +127,7 @@ export default function ContributionDashboard({
             type="button"
             onClick={() => handleRunAudit(true)}
             disabled={analyzing}
-            className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700 disabled:opacity-60 cursor-pointer"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700 disabled:opacity-60 sm:w-auto cursor-pointer"
           >
             {analyzing ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -142,14 +142,14 @@ export default function ContributionDashboard({
           </button>
         </div>
 
-        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-            <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+        <div className="mt-4 grid grid-cols-2 gap-2.5 sm:mt-5 sm:gap-3 lg:grid-cols-4">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:p-4">
+            <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 sm:text-[11px]">
               Overall Fairness Score
             </div>
             <div className="mt-1 flex items-baseline gap-2">
               <span
-                className={`font-display text-2xl font-extrabold tabular-nums ${
+                className={`font-display text-xl font-extrabold tabular-nums sm:text-2xl ${
                   fairnessScore === null
                     ? 'text-slate-400'
                     : fairnessScore >= 80
@@ -164,29 +164,29 @@ export default function ContributionDashboard({
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-            <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:p-4">
+            <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 sm:text-[11px]">
               Tracked Drive Edits
             </div>
-            <div className="mt-1 font-display text-2xl font-extrabold text-slate-900 tabular-nums">
+            <div className="mt-1 font-display text-xl font-extrabold text-slate-900 tabular-nums sm:text-2xl">
               {totalRevisions}
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-            <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:p-4">
+            <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 sm:text-[11px]">
               Net Content Delta
             </div>
-            <div className="mt-1 font-display text-2xl font-extrabold text-slate-900 tabular-nums">
+            <div className="mt-1 font-display text-xl font-extrabold text-slate-900 tabular-nums sm:text-2xl">
               +{totalKb} KB
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-            <div className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:p-4">
+            <div className="text-[10px] font-semibold uppercase tracking-wide text-slate-500 sm:text-[11px]">
               Free-Rider Risk Flags
             </div>
-            <div className="mt-1 font-display text-2xl font-extrabold text-slate-900 tabular-nums">
+            <div className="mt-1 font-display text-xl font-extrabold text-slate-900 tabular-nums sm:text-2xl">
               {stats.filter((s) => s.cramming_risk).length}
             </div>
           </div>
@@ -194,7 +194,7 @@ export default function ContributionDashboard({
       </div>
 
       {!evaluation ? (
-        <div className="rounded-2xl border border-dashed border-indigo-300 bg-indigo-50/40 p-10 text-center">
+        <div className="rounded-2xl border border-dashed border-indigo-300 bg-indigo-50/40 p-6 text-center sm:p-10">
           <Sparkles className="mx-auto h-8 w-8 text-indigo-600" />
           <h3 className="mt-3 font-display text-base font-bold text-slate-900">
             Ready to Run Your First AI Contribution Audit
@@ -206,8 +206,8 @@ export default function ContributionDashboard({
         </div>
       ) : (
         <>
-          <div className="grid gap-6 lg:grid-cols-12">
-            <div className="lg:col-span-7 rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
+          <div className="grid gap-4 sm:gap-6 lg:grid-cols-12">
+            <div className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-xs sm:p-5 lg:col-span-7">
               <div className="mb-3">
                 <h3 className="font-display text-sm font-bold text-slate-900">
                   Claimed Peer Rating vs. Actual Drive Revision Effort
@@ -216,12 +216,12 @@ export default function ContributionDashboard({
                   Detects discrepancies between self/peer claims and verified Drive authorship
                 </p>
               </div>
-              <div className="h-[290px] w-full">
-                <ResponsiveContainer width="100%" height={290}>
+              <div className="h-[270px] w-full sm:h-[290px]">
+                <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={chartData}
                     layout="vertical"
-                    margin={{ top: 8, right: 20, left: 10, bottom: 8 }}
+                    margin={{ top: 4, right: 12, left: 0, bottom: 4 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
                     <XAxis
@@ -233,8 +233,8 @@ export default function ContributionDashboard({
                     <YAxis
                       type="category"
                       dataKey="name"
-                      width={75}
-                      tick={{ fontSize: 12, fill: '#0f172a', fontWeight: 600 }}
+                      width={60}
+                      tick={{ fontSize: 11, fill: '#0f172a', fontWeight: 600 }}
                     />
                     <Tooltip
                       formatter={(val) => `${val}%`}
@@ -244,7 +244,7 @@ export default function ContributionDashboard({
                         fontSize: '12px'
                       }}
                     />
-                    <Legend wrapperStyle={{ fontSize: '12px' }} />
+                    <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '6px' }} />
                     <Bar
                       dataKey="claimedPeerPct"
                       name="Claimed Rating Share"
@@ -271,7 +271,7 @@ export default function ContributionDashboard({
               </div>
             </div>
 
-            <div className="lg:col-span-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
+            <div className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 shadow-xs sm:p-5 lg:col-span-5">
               <div className="mb-3">
                 <h3 className="font-display text-sm font-bold text-slate-900">
                   Final AI Contribution Split (100%)
@@ -280,17 +280,17 @@ export default function ContributionDashboard({
                   Normalized contribution percentage across all group members
                 </p>
               </div>
-              <div className="h-[290px] w-full">
-                <ResponsiveContainer width="100%" height={290}>
+              <div className="h-[280px] w-full sm:h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
                       data={chartData}
                       dataKey="aiFinalPct"
                       nameKey="fullName"
                       cx="50%"
-                      cy="46%"
-                      innerRadius={62}
-                      outerRadius={95}
+                      cy="42%"
+                      innerRadius="45%"
+                      outerRadius="70%"
                       paddingAngle={3}
                     >
                       {chartData.map((entry) => (
@@ -305,7 +305,7 @@ export default function ContributionDashboard({
                         fontSize: '12px'
                       }}
                     />
-                    <Legend wrapperStyle={{ fontSize: '12px' }} />
+                    <Legend wrapperStyle={{ fontSize: '11px' }} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
@@ -324,13 +324,13 @@ export default function ContributionDashboard({
               return (
                 <div
                   key={member.email}
-                  className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-5 shadow-xs"
+                  className="flex min-w-0 flex-col justify-between rounded-2xl border border-slate-200 bg-white p-4 shadow-xs sm:p-5"
                 >
                   <div>
                     <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-display text-base font-bold text-slate-900">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                          <h4 className="font-display text-base font-bold text-slate-900 break-words">
                             {member.name}
                           </h4>
                           {stat.is_leader && (
@@ -340,11 +340,11 @@ export default function ContributionDashboard({
                             </span>
                           )}
                         </div>
-                        <div className="text-xs text-slate-500">{member.email}</div>
+                        <div className="truncate text-xs text-slate-500">{member.email}</div>
                       </div>
 
-                      <div className="text-right">
-                        <div className="font-display text-2xl font-extrabold text-indigo-600 tabular-nums">
+                      <div className="shrink-0 text-right">
+                        <div className="font-display text-xl font-extrabold text-indigo-600 tabular-nums sm:text-2xl">
                           {member.contribution_percentage}%
                         </div>
                         <span
@@ -381,7 +381,7 @@ export default function ContributionDashboard({
                     </div>
 
                     <div className="mt-4 rounded-xl border border-slate-100 bg-slate-50/70 p-3">
-                      <div className="mb-1 flex items-center justify-between text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+                      <div className="mb-1 flex flex-wrap items-center justify-between gap-1 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
                         <span>Revision Timeline Sparkline</span>
                         <span>Multiplier: {Number(member.suggested_grade_multiplier).toFixed(2)}x</span>
                       </div>

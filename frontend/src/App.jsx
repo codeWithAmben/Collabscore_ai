@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Loader2, X } from 'lucide-react';
+import { ChevronRight, FolderKanban, Loader2, X } from 'lucide-react';
 import { api, consumeTokenFromUrl, getStoredToken } from './api/client.js';
 import ContributionDashboard from './components/ContributionDashboard.jsx';
 import Header from './components/Header.jsx';
@@ -22,6 +22,7 @@ export default function App() {
 
   const [authError, setAuthError] = useState('');
   const [toast, setToast] = useState(null);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   const showToast = useCallback((message, type = 'info') => {
     setToast({ id: Date.now(), message, type });
@@ -32,6 +33,22 @@ export default function App() {
     const timer = setTimeout(() => setToast(null), 4500);
     return () => clearTimeout(timer);
   }, [toast]);
+
+  useEffect(() => {
+    if (!mobileSidebarOpen) return undefined;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setMobileSidebarOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [mobileSidebarOpen]);
 
   const loadWorkspaceProjects = useCallback(async (preferredProjectId = null) => {
     const { projects: list } = await api.listProjects();
@@ -190,29 +207,91 @@ export default function App() {
         onRoleSwitch={handleRoleSwitch}
         roleSwitching={roleSwitching}
         onLogout={handleLogout}
+        onOpenMobileSidebar={() => setMobileSidebarOpen(true)}
       />
 
-      <main className="mx-auto max-w-[1440px] px-4 py-6 sm:px-6">
+      <main className="mx-auto max-w-[1440px] px-3 py-4 sm:px-6 sm:py-6">
+        <div className="mb-4 lg:hidden">
+          <button
+            type="button"
+            onClick={() => setMobileSidebarOpen(true)}
+            className="flex w-full items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-3.5 py-3 text-left shadow-xs transition hover:border-indigo-300 cursor-pointer"
+          >
+            <div className="flex min-w-0 items-center gap-2.5">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+                <FolderKanban className="h-4 w-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="truncate text-xs font-bold text-slate-900">
+                  {activeProject ? activeProject.title : 'Projects & Group Roster'}
+                </div>
+                <div className="truncate text-[11px] text-slate-500">
+                  {projects.length} projects
+                  {activeProject ? ` · ${activeProject.members.length} members` : ''}
+                </div>
+              </div>
+            </div>
+            <span className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-slate-100 px-2.5 py-1 text-[11px] font-semibold text-slate-700">
+              Projects
+              <ChevronRight className="h-3.5 w-3.5" />
+            </span>
+          </button>
+        </div>
+
         <div className="grid gap-6 lg:grid-cols-12">
-          <div className="lg:col-span-3">
+          {mobileSidebarOpen && (
+            <div
+              className="fixed inset-0 z-40 bg-slate-900/50 backdrop-blur-xs lg:hidden"
+              onClick={() => setMobileSidebarOpen(false)}
+              aria-hidden="true"
+            />
+          )}
+
+          <div
+            className={
+              mobileSidebarOpen
+                ? 'fixed inset-y-0 left-0 z-50 w-[min(88vw,340px)] overflow-y-auto bg-slate-50 p-4 shadow-2xl lg:static lg:z-auto lg:col-span-3 lg:w-auto lg:overflow-visible lg:bg-transparent lg:p-0 lg:shadow-none'
+                : 'hidden lg:block lg:col-span-3'
+            }
+          >
+            <div className="mb-3 flex items-center justify-between lg:hidden">
+              <span className="font-display text-sm font-bold text-slate-900">
+                Projects &amp; Roster
+              </span>
+              <button
+                type="button"
+                onClick={() => setMobileSidebarOpen(false)}
+                aria-label="Close projects drawer"
+                className="rounded-lg border border-slate-200 bg-white p-1.5 text-slate-500 hover:bg-slate-100 cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
             <ProjectSidebar
               projects={projects}
               activeProjectId={activeProjectId}
               activeProject={activeProject}
-              onSelectProject={handleSelectProject}
-              onProjectCreated={handleProjectCreated}
+              onSelectProject={(projectId) => {
+                setMobileSidebarOpen(false);
+                handleSelectProject(projectId);
+              }}
+              onProjectCreated={(newProject) => {
+                setMobileSidebarOpen(false);
+                return handleProjectCreated(newProject);
+              }}
               onProjectUpdated={handleProjectUpdated}
               onShowToast={showToast}
             />
           </div>
 
-          <div className="lg:col-span-9 space-y-6">
+          <div className="lg:col-span-9 min-w-0 space-y-4 sm:space-y-6">
             {loadingProject ? (
               <div className="flex h-64 items-center justify-center rounded-2xl border border-slate-200 bg-white">
                 <Loader2 className="h-6 w-6 animate-spin text-indigo-600" />
               </div>
             ) : !activeProject ? (
-              <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center">
+              <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-6 text-center sm:p-12">
                 <h2 className="font-display text-lg font-bold text-slate-900">
                   No Project Selected
                 </h2>
@@ -222,18 +301,18 @@ export default function App() {
               </div>
             ) : (
               <>
-                <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs">
+                <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs sm:p-5">
                   <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
+                    <div className="min-w-0">
                       <span className="text-[11px] font-semibold uppercase tracking-wider text-indigo-600">
                         {isInstructor ? 'Instructor Audit Mode' : 'Student Leader Workspace'} ·{' '}
                         {activeProject.course_name}
                       </span>
-                      <h1 className="mt-0.5 font-display text-xl font-extrabold text-slate-900">
+                      <h1 className="mt-0.5 font-display text-lg font-extrabold text-slate-900 break-words sm:text-xl">
                         {activeProject.title}
                       </h1>
                     </div>
-                    <div className="flex items-center gap-2 text-xs">
+                    <div className="flex flex-wrap items-center gap-2 text-xs">
                       <span className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 font-medium text-slate-700">
                         Base Grade: <strong className="tabular-nums">{activeProject.group_base_grade}/100</strong>
                       </span>
@@ -293,7 +372,7 @@ function ToastBanner({ toast, onClose }) {
         : 'border-indigo-300 bg-indigo-50 text-indigo-900';
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 max-w-sm">
+    <div className="fixed inset-x-3 bottom-3 z-[70] pb-[env(safe-area-inset-bottom)] sm:inset-x-auto sm:bottom-5 sm:right-5 sm:max-w-sm">
       <div
         className={`flex items-start gap-3 rounded-xl border px-4 py-3 text-xs font-medium shadow-lg ${styles}`}
       >

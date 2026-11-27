@@ -81,12 +81,12 @@ export default function InstructorGradeView({
   };
 
   return (
-    <section className="space-y-6">
-      <div className="rounded-2xl border border-indigo-200 bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 p-6 text-white shadow-lg">
+    <section className="space-y-4 sm:space-y-6">
+      <div className="rounded-2xl border border-indigo-200 bg-gradient-to-br from-indigo-950 via-slate-900 to-indigo-900 p-4 text-white shadow-lg sm:p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="max-w-3xl">
+          <div className="min-w-0 max-w-3xl">
             <div className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-[11px] font-semibold text-indigo-200">
-              <Sparkles className="h-3.5 w-3.5" />
+              <Sparkles className="h-3.5 w-3.5 shrink-0" />
               Instructor Fairness Audit Summary
             </div>
             <h2 className="mt-3 font-display text-lg font-bold">
@@ -102,7 +102,7 @@ export default function InstructorGradeView({
             <button
               type="button"
               onClick={handleCopySummary}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-3.5 py-2 text-xs font-semibold text-white transition hover:bg-white/20 cursor-pointer"
+              className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-3.5 py-2 text-xs font-semibold text-white transition hover:bg-white/20 sm:w-auto cursor-pointer"
             >
               {copied ? <Check className="h-3.5 w-3.5 text-emerald-300" /> : <Copy className="h-3.5 w-3.5" />}
               {copied ? 'Copied' : 'Copy Audit Note'}
@@ -111,11 +111,11 @@ export default function InstructorGradeView({
         </div>
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-xs">
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-5">
-          <div>
+      <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-xs sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-100 pb-4 sm:pb-5">
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <Calculator className="h-5 w-5 text-indigo-600" />
+              <Calculator className="h-5 w-5 shrink-0 text-indigo-600" />
               <h3 className="font-display text-base font-bold text-slate-900">
                 Instructor Fair Grade Calculator
               </h3>
@@ -126,11 +126,11 @@ export default function InstructorGradeView({
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
             <select
               value={calcMode}
               onChange={(e) => setCalcMode(e.target.value)}
-              className="rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 focus:border-indigo-500 focus:outline-none"
+              className="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 focus:border-indigo-500 focus:outline-none sm:w-auto"
             >
               <option value="multiplier">Policy: AI Suggested Multiplier</option>
               <option value="capped">Policy: Bounded (+10 / -18 pt cap)</option>
@@ -139,7 +139,7 @@ export default function InstructorGradeView({
               type="button"
               onClick={handleExportCsv}
               disabled={gradeRows.length === 0}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50 cursor-pointer"
+              className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-50 sm:w-auto cursor-pointer"
             >
               <Download className="h-3.5 w-3.5" />
               Export CSV
@@ -147,40 +147,42 @@ export default function InstructorGradeView({
           </div>
         </div>
 
-        <div className="mt-5 flex flex-wrap items-center gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+        <div className="mt-4 flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3.5 sm:mt-5 sm:p-4 lg:flex-row lg:flex-wrap lg:items-center lg:gap-4">
           <div className="flex items-center gap-2">
-            <GraduationCap className="h-4 w-4 text-indigo-600" />
+            <GraduationCap className="h-4 w-4 shrink-0 text-indigo-600" />
             <label htmlFor="groupBaseGrade" className="text-xs font-semibold text-slate-800">
               Classroom Group Grade (0–100):
             </label>
           </div>
 
-          <input
-            id="groupBaseGrade"
-            type="number"
-            min="0"
-            max="100"
-            step="0.5"
-            value={groupGradeInput}
-            onChange={(e) => setGroupGradeInput(e.target.value)}
-            className="w-24 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-bold text-slate-900 tabular-nums focus:border-indigo-500 focus:outline-none"
-          />
+          <div className="flex min-w-0 flex-1 items-center gap-3">
+            <input
+              id="groupBaseGrade"
+              type="number"
+              min="0"
+              max="100"
+              step="0.5"
+              value={groupGradeInput}
+              onChange={(e) => setGroupGradeInput(e.target.value)}
+              className="w-20 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-bold text-slate-900 tabular-nums focus:border-indigo-500 focus:outline-none sm:w-24"
+            />
 
-          <input
-            type="range"
-            min="50"
-            max="100"
-            step="1"
-            value={Math.min(100, Math.max(50, Number(groupGradeInput) || 90))}
-            onChange={(e) => setGroupGradeInput(Number(e.target.value))}
-            className="h-2 w-44 accent-indigo-600 cursor-pointer"
-          />
+            <input
+              type="range"
+              min="50"
+              max="100"
+              step="1"
+              value={Math.min(100, Math.max(50, Number(groupGradeInput) || 90))}
+              onChange={(e) => setGroupGradeInput(Number(e.target.value))}
+              className="h-2 min-w-[120px] flex-1 accent-indigo-600 cursor-pointer lg:w-44 lg:flex-none"
+            />
+          </div>
 
           <button
             type="button"
             onClick={handleSaveGroupGrade}
             disabled={savingGrade}
-            className="ml-auto inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-indigo-700 disabled:opacity-50 cursor-pointer"
+            className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-indigo-700 disabled:opacity-50 lg:ml-auto lg:w-auto lg:py-2 cursor-pointer"
           >
             <Save className="h-3.5 w-3.5" />
             {savingGrade ? 'Saving...' : 'Save Base Grade'}
@@ -192,56 +194,31 @@ export default function InstructorGradeView({
             Run an AI Contribution Audit first to calculate individual grade multipliers.
           </div>
         ) : (
-          <div className="mt-5 overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead>
-                <tr className="border-b border-slate-200 text-[11px] uppercase tracking-wide text-slate-500">
-                  <th className="py-3 pr-4 font-semibold">Student</th>
-                  <th className="px-4 py-3 font-semibold">Effort Tier</th>
-                  <th className="px-4 py-3 font-semibold text-right">Contribution</th>
-                  <th className="px-4 py-3 font-semibold text-right">Multiplier</th>
-                  <th className="px-4 py-3 font-semibold text-right">Unadjusted Group</th>
-                  <th className="px-4 py-3 font-semibold text-right">Fair Individual Grade</th>
-                  <th className="pl-4 py-3 font-semibold text-right">Letter</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {gradeRows.map((row) => (
-                  <tr key={row.email} className="hover:bg-slate-50/70">
-                    <td className="py-3.5 pr-4">
-                      <div className="font-semibold text-slate-900">{row.name}</div>
-                      <div className="text-[11px] text-slate-500">{row.email}</div>
-                    </td>
-                    <td className="px-4 py-3.5">
+          <>
+            <div className="mt-4 space-y-3 md:hidden">
+              {gradeRows.map((row) => (
+                <div
+                  key={row.email}
+                  className="rounded-xl border border-slate-200 bg-white p-3.5"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <div className="font-semibold text-sm text-slate-900 break-words">
+                        {row.name}
+                      </div>
+                      <div className="truncate text-[11px] text-slate-500">{row.email}</div>
+                    </div>
+                    <div className="shrink-0 text-right tabular-nums">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <span className="font-display text-base font-extrabold text-slate-900">
+                          {row.adjusted_grade}
+                        </span>
+                        <span className="text-sm font-bold text-indigo-700">
+                          {row.letter_grade}
+                        </span>
+                      </div>
                       <span
-                        className={`inline-block rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${
-                          row.effort_tier === 'Core Driver'
-                            ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-                            : row.effort_tier === 'Consistent Contributor'
-                              ? 'border-indigo-200 bg-indigo-50 text-indigo-700'
-                              : row.effort_tier === 'Minimal Contributor'
-                                ? 'border-amber-200 bg-amber-50 text-amber-700'
-                                : 'border-rose-200 bg-rose-50 text-rose-700'
-                        }`}
-                      >
-                        {row.effort_tier}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3.5 text-right font-bold text-slate-900 tabular-nums">
-                      {row.contribution_percentage}%
-                    </td>
-                    <td className="px-4 py-3.5 text-right font-mono text-slate-600 tabular-nums">
-                      {row.suggested_grade_multiplier.toFixed(2)}x
-                    </td>
-                    <td className="px-4 py-3.5 text-right text-slate-500 tabular-nums">
-                      {row.unadjusted_grade}
-                    </td>
-                    <td className="px-4 py-3.5 text-right tabular-nums">
-                      <span className="font-display text-sm font-extrabold text-slate-900">
-                        {row.adjusted_grade}
-                      </span>
-                      <span
-                        className={`ml-2 inline-block rounded px-1.5 py-0.5 text-[10px] font-bold ${
+                        className={`mt-0.5 inline-block rounded px-1.5 py-0.5 text-[10px] font-bold ${
                           row.delta > 0
                             ? 'bg-emerald-50 text-emerald-700'
                             : row.delta < 0
@@ -249,17 +226,124 @@ export default function InstructorGradeView({
                               : 'bg-slate-100 text-slate-600'
                         }`}
                       >
-                        {row.delta >= 0 ? `+${row.delta}` : row.delta}
+                        {row.delta >= 0 ? `+${row.delta}` : row.delta} vs group
                       </span>
-                    </td>
-                    <td className="pl-4 py-3.5 text-right font-bold text-indigo-700">
-                      {row.letter_grade}
-                    </td>
+                    </div>
+                  </div>
+
+                  <div className="mt-2">
+                    <span
+                      className={`inline-block rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${
+                        row.effort_tier === 'Core Driver'
+                          ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                          : row.effort_tier === 'Consistent Contributor'
+                            ? 'border-indigo-200 bg-indigo-50 text-indigo-700'
+                            : row.effort_tier === 'Minimal Contributor'
+                              ? 'border-amber-200 bg-amber-50 text-amber-700'
+                              : 'border-rose-200 bg-rose-50 text-rose-700'
+                      }`}
+                    >
+                      {row.effort_tier}
+                    </span>
+                  </div>
+
+                  <div className="mt-2.5 grid grid-cols-3 gap-2 rounded-lg bg-slate-50 p-2 text-center text-[11px] tabular-nums">
+                    <div>
+                      <div className="text-[10px] font-medium uppercase text-slate-500">
+                        Share
+                      </div>
+                      <div className="font-bold text-slate-900">
+                        {row.contribution_percentage}%
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-medium uppercase text-slate-500">
+                        Multiplier
+                      </div>
+                      <div className="font-mono font-semibold text-slate-700">
+                        {row.suggested_grade_multiplier.toFixed(2)}x
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-medium uppercase text-slate-500">
+                        Group Base
+                      </div>
+                      <div className="font-semibold text-slate-700">{row.unadjusted_grade}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-5 hidden overflow-x-auto md:block">
+              <table className="w-full text-left text-xs">
+                <thead>
+                  <tr className="border-b border-slate-200 text-[11px] uppercase tracking-wide text-slate-500">
+                    <th className="py-3 pr-4 font-semibold">Student</th>
+                    <th className="px-4 py-3 font-semibold">Effort Tier</th>
+                    <th className="px-4 py-3 font-semibold text-right">Contribution</th>
+                    <th className="px-4 py-3 font-semibold text-right">Multiplier</th>
+                    <th className="px-4 py-3 font-semibold text-right">Unadjusted Group</th>
+                    <th className="px-4 py-3 font-semibold text-right">Fair Individual Grade</th>
+                    <th className="pl-4 py-3 font-semibold text-right">Letter</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {gradeRows.map((row) => (
+                    <tr key={row.email} className="hover:bg-slate-50/70">
+                      <td className="py-3.5 pr-4">
+                        <div className="font-semibold text-slate-900">{row.name}</div>
+                        <div className="text-[11px] text-slate-500">{row.email}</div>
+                      </td>
+                      <td className="px-4 py-3.5">
+                        <span
+                          className={`inline-block rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${
+                            row.effort_tier === 'Core Driver'
+                              ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
+                              : row.effort_tier === 'Consistent Contributor'
+                                ? 'border-indigo-200 bg-indigo-50 text-indigo-700'
+                                : row.effort_tier === 'Minimal Contributor'
+                                  ? 'border-amber-200 bg-amber-50 text-amber-700'
+                                  : 'border-rose-200 bg-rose-50 text-rose-700'
+                          }`}
+                        >
+                          {row.effort_tier}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3.5 text-right font-bold text-slate-900 tabular-nums">
+                        {row.contribution_percentage}%
+                      </td>
+                      <td className="px-4 py-3.5 text-right font-mono text-slate-600 tabular-nums">
+                        {row.suggested_grade_multiplier.toFixed(2)}x
+                      </td>
+                      <td className="px-4 py-3.5 text-right text-slate-500 tabular-nums">
+                        {row.unadjusted_grade}
+                      </td>
+                      <td className="px-4 py-3.5 text-right tabular-nums">
+                        <span className="font-display text-sm font-extrabold text-slate-900">
+                          {row.adjusted_grade}
+                        </span>
+                        <span
+                          className={`ml-2 inline-block rounded px-1.5 py-0.5 text-[10px] font-bold ${
+                            row.delta > 0
+                              ? 'bg-emerald-50 text-emerald-700'
+                              : row.delta < 0
+                                ? 'bg-rose-50 text-rose-700'
+                                : 'bg-slate-100 text-slate-600'
+                          }`}
+                        >
+                          {row.delta >= 0 ? `+${row.delta}` : row.delta}
+                        </span>
+                      </td>
+                      <td className="pl-4 py-3.5 text-right font-bold text-indigo-700">
+                        {row.letter_grade}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </section>

@@ -64,7 +64,8 @@ export default function GoogleDrivePicker({
   user,
   onFilesPicked,
   disabled,
-  onShowToast
+  onShowToast,
+  buttonClassName = ''
 }) {
   const [pickerApiReady, setPickerApiReady] = useState(false);
   const [loadingLivePicker, setLoadingLivePicker] = useState(false);
@@ -220,7 +221,7 @@ export default function GoogleDrivePicker({
         type="button"
         onClick={handleOpenPickerClick}
         disabled={disabled || loadingLivePicker}
-        className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700 disabled:opacity-50 cursor-pointer"
+        className={`inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-semibold text-white shadow-sm transition hover:bg-indigo-700 disabled:opacity-50 cursor-pointer ${buttonClassName}`}
       >
         {loadingLivePicker ? (
           <Loader2 className="h-4 w-4 animate-spin" />
@@ -231,16 +232,16 @@ export default function GoogleDrivePicker({
       </button>
 
       {showDemoModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-xl rounded-2xl border border-slate-200 bg-white shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
-              <div>
-                <div className="flex items-center gap-2">
+        <div className="fixed inset-0 z-[60] flex items-end justify-center bg-slate-900/50 p-2 backdrop-blur-xs sm:items-center sm:p-4">
+          <div className="flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+            <div className="flex shrink-0 items-start justify-between gap-3 border-b border-slate-100 px-4 py-3 sm:items-center sm:px-6 sm:py-4">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
                   <h3 className="font-display text-base font-bold text-slate-900">
                     Google Drive Picker
                   </h3>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700 border border-emerald-200">
-                    <Shield className="h-3 w-3" />
+                  <span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+                    <Shield className="h-3 w-3 shrink-0" />
                     drive.file scope
                   </span>
                 </div>
@@ -252,15 +253,16 @@ export default function GoogleDrivePicker({
               <button
                 type="button"
                 onClick={() => setShowDemoModal(false)}
-                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 cursor-pointer"
+                aria-label="Close modal"
+                className="shrink-0 rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <div className="p-6 space-y-4">
+            <div className="flex-1 space-y-4 overflow-y-auto p-4 sm:p-6">
               {isLivePickerConfigured && pickerApiReady && (
-                <div className="flex items-center justify-between rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-3">
+                <div className="flex flex-col gap-2 rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
                   <span className="text-xs font-medium text-indigo-800">
                     Google Picker API is configured in your environment.
                   </span>
@@ -270,7 +272,7 @@ export default function GoogleDrivePicker({
                       setShowDemoModal(false);
                       launchLiveGooglePicker();
                     }}
-                    className="rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-700 cursor-pointer"
+                    className="w-full shrink-0 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-indigo-700 sm:w-auto cursor-pointer"
                   >
                     Open Live Google Picker
                   </button>
@@ -289,27 +291,27 @@ export default function GoogleDrivePicker({
                         key={item.google_file_id}
                         type="button"
                         onClick={() => toggleDemoSelection(item.google_file_id)}
-                        className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left transition cursor-pointer ${
+                        className={`flex w-full items-center justify-between gap-2.5 rounded-xl border px-3 py-2.5 text-left transition sm:px-4 sm:py-3 cursor-pointer ${
                           checked
                             ? 'border-indigo-500 bg-indigo-50/70'
                             : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
                         }`}
                       >
-                        <div className="flex items-center gap-3">
+                        <div className="flex min-w-0 flex-1 items-start gap-2.5 sm:items-center sm:gap-3">
                           {checked ? (
-                            <CheckSquare className="h-4 w-4 text-indigo-600 shrink-0" />
+                            <CheckSquare className="mt-0.5 h-4 w-4 shrink-0 text-indigo-600 sm:mt-0" />
                           ) : (
-                            <Square className="h-4 w-4 text-slate-400 shrink-0" />
+                            <Square className="mt-0.5 h-4 w-4 shrink-0 text-slate-400 sm:mt-0" />
                           )}
-                          {getMimeIcon(item.mime_type)}
-                          <div>
-                            <div className="text-sm font-semibold text-slate-900">
+                          <span className="shrink-0">{getMimeIcon(item.mime_type)}</span>
+                          <div className="min-w-0 flex-1">
+                            <div className="break-all text-xs font-semibold text-slate-900 sm:break-words sm:text-sm">
                               {item.file_name}
                             </div>
-                            <div className="text-xs text-slate-500">{item.description}</div>
+                            <div className="text-[11px] text-slate-500 sm:text-xs">{item.description}</div>
                           </div>
                         </div>
-                        <span className="rounded bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600">
+                        <span className="shrink-0 rounded bg-slate-100 px-2 py-0.5 text-[10px] font-medium text-slate-600">
                           {item.mime_type.includes('presentation')
                             ? 'Slides'
                             : item.mime_type.includes('spreadsheet')
@@ -334,12 +336,12 @@ export default function GoogleDrivePicker({
                     value={customFileName}
                     onChange={(e) => setCustomFileName(e.target.value)}
                     placeholder="e.g., Week8_Lab_Report.gdoc"
-                    className="sm:col-span-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs text-slate-900 focus:border-indigo-500 focus:outline-none"
+                    className="min-w-0 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none sm:col-span-2 sm:text-xs"
                   />
                   <select
                     value={customMimeType}
                     onChange={(e) => setCustomMimeType(e.target.value)}
-                    className="rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-xs text-slate-900 focus:border-indigo-500 focus:outline-none"
+                    className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-sm text-slate-900 focus:border-indigo-500 focus:outline-none sm:text-xs"
                   >
                     <option value="application/vnd.google-apps.document">Google Doc</option>
                     <option value="application/vnd.google-apps.presentation">Google Slides</option>
@@ -350,18 +352,18 @@ export default function GoogleDrivePicker({
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2.5 border-t border-slate-100 px-6 py-4">
+            <div className="flex shrink-0 flex-col-reverse gap-2 border-t border-slate-100 px-4 py-3 sm:flex-row sm:items-center sm:justify-end sm:gap-2.5 sm:px-6 sm:py-4">
               <button
                 type="button"
                 onClick={() => setShowDemoModal(false)}
-                className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer"
+                className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 sm:w-auto sm:py-2 cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleAttachSelectedDemoFiles}
-                className="rounded-xl bg-indigo-600 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-indigo-700 cursor-pointer"
+                className="w-full rounded-xl bg-indigo-600 px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-indigo-700 sm:w-auto sm:py-2 cursor-pointer"
               >
                 Attach &amp; Sync Revisions
               </button>

@@ -245,7 +245,7 @@ export default function ProjectSidebar({
                 placeholder="Student Name"
                 value={newMember.user_name}
                 onChange={(e) => setNewMember((p) => ({ ...p, user_name: e.target.value }))}
-                className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-sm focus:border-indigo-500 focus:outline-none sm:py-1.5 sm:text-xs"
                 required
               />
               <input
@@ -253,7 +253,7 @@ export default function ProjectSidebar({
                 placeholder="student@university.edu"
                 value={newMember.user_email}
                 onChange={(e) => setNewMember((p) => ({ ...p, user_email: e.target.value }))}
-                className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-sm focus:border-indigo-500 focus:outline-none sm:py-1.5 sm:text-xs"
                 required
               />
               <input
@@ -261,7 +261,7 @@ export default function ProjectSidebar({
                 placeholder="Assigned section (e.g., Evaluation)"
                 value={newMember.assigned_section}
                 onChange={(e) => setNewMember((p) => ({ ...p, assigned_section: e.target.value }))}
-                className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs focus:border-indigo-500 focus:outline-none"
+                className="w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-sm focus:border-indigo-500 focus:outline-none sm:py-1.5 sm:text-xs"
               />
               <div className="flex items-center justify-between pt-1">
                 <label className="flex items-center gap-1.5 text-[11px] text-slate-600">
@@ -320,10 +320,10 @@ export default function ProjectSidebar({
       )}
 
       {showCreateModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-xs">
-          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-slate-200 bg-white shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
-              <div>
+        <div className="fixed inset-0 z-[60] flex items-end justify-center bg-slate-900/50 p-2 backdrop-blur-xs sm:items-center sm:p-4">
+          <div className="flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl">
+            <div className="flex shrink-0 items-center justify-between gap-3 border-b border-slate-100 px-4 py-3 sm:px-6 sm:py-4">
+              <div className="min-w-0">
                 <h3 className="font-display text-base font-bold text-slate-900">
                   Create Project Workspace
                 </h3>
@@ -334,14 +334,15 @@ export default function ProjectSidebar({
               <button
                 type="button"
                 onClick={() => setShowCreateModal(false)}
-                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 cursor-pointer"
+                aria-label="Close modal"
+                className="shrink-0 rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            <div className="border-b border-slate-100 px-6 pt-3">
-              <div className="flex gap-4">
+            <div className="shrink-0 border-b border-slate-100 px-4 pt-2.5 sm:px-6 sm:pt-3">
+              <div className="flex gap-3 overflow-x-auto whitespace-nowrap sm:gap-4">
                 <button
                   type="button"
                   onClick={() => setCreateTab('classroom')}
@@ -367,15 +368,15 @@ export default function ProjectSidebar({
               </div>
             </div>
 
-            <form onSubmit={handleCreateSubmit} className="p-6 space-y-5">
+            <form onSubmit={handleCreateSubmit} className="flex-1 space-y-4 overflow-y-auto p-4 sm:space-y-5 sm:p-6">
               {createTab === 'classroom' && (
-                <div className="space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
-                  <div className="flex items-center justify-between">
+                <div className="space-y-3 rounded-xl border border-slate-200 bg-slate-50 p-3.5 sm:p-4">
+                  <div className="flex items-center justify-between gap-2">
                     <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-800">
-                      <BookOpen className="h-4 w-4 text-indigo-600" />
+                      <BookOpen className="h-4 w-4 shrink-0 text-indigo-600" />
                       Available Google Classroom Courses
                     </span>
-                    {classroomLoading && <Loader2 className="h-4 w-4 animate-spin text-indigo-600" />}
+                    {classroomLoading && <Loader2 className="h-4 w-4 shrink-0 animate-spin text-indigo-600" />}
                   </div>
 
                   {classroomNote && (
@@ -449,7 +450,7 @@ export default function ProjectSidebar({
               </div>
 
               <div>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <label className="text-xs font-semibold text-slate-700">
                     Group Members (Auto-populated or Manual Entry)
                   </label>
@@ -473,14 +474,14 @@ export default function ProjectSidebar({
                         placeholder="Full Name"
                         value={row.user_name}
                         onChange={(e) => handleUpdateDraftRow(idx, 'user_name', e.target.value)}
-                        className="sm:col-span-3 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs focus:border-indigo-500 focus:outline-none"
+                        className="min-w-0 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-sm focus:border-indigo-500 focus:outline-none sm:col-span-3 sm:py-1.5 sm:text-xs"
                       />
                       <input
                         type="email"
                         placeholder="Email address"
                         value={row.user_email}
                         onChange={(e) => handleUpdateDraftRow(idx, 'user_email', e.target.value)}
-                        className="sm:col-span-4 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs focus:border-indigo-500 focus:outline-none"
+                        className="min-w-0 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-sm focus:border-indigo-500 focus:outline-none sm:col-span-4 sm:py-1.5 sm:text-xs"
                       />
                       <input
                         type="text"
@@ -489,10 +490,10 @@ export default function ProjectSidebar({
                         onChange={(e) =>
                           handleUpdateDraftRow(idx, 'assigned_section', e.target.value)
                         }
-                        className="sm:col-span-3 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs focus:border-indigo-500 focus:outline-none"
+                        className="min-w-0 w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-sm focus:border-indigo-500 focus:outline-none sm:col-span-3 sm:py-1.5 sm:text-xs"
                       />
-                      <div className="sm:col-span-2 flex items-center justify-between gap-1">
-                        <label className="flex items-center gap-1 text-[11px] text-slate-600">
+                      <div className="flex items-center justify-between gap-1 sm:col-span-2">
+                        <label className="flex items-center gap-1.5 text-xs text-slate-600 sm:text-[11px]">
                           <input
                             type="checkbox"
                             checked={Boolean(row.is_leader)}
@@ -506,7 +507,7 @@ export default function ProjectSidebar({
                           <button
                             type="button"
                             onClick={() => handleRemoveDraftRow(idx)}
-                            className="rounded p-1 text-slate-400 hover:text-rose-600 cursor-pointer"
+                            className="rounded p-1.5 text-slate-400 hover:text-rose-600 sm:p-1 cursor-pointer"
                           >
                             <Trash2 className="h-3.5 w-3.5" />
                           </button>
@@ -517,18 +518,18 @@ export default function ProjectSidebar({
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-2 border-t border-slate-100 pt-4">
+              <div className="flex flex-col-reverse gap-2 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-end">
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="rounded-xl border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50 cursor-pointer"
+                  className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-semibold text-slate-600 hover:bg-slate-50 sm:w-auto sm:py-2 cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={creating}
-                  className="rounded-xl bg-indigo-600 px-5 py-2 text-xs font-semibold text-white shadow-sm hover:bg-indigo-700 disabled:opacity-50 cursor-pointer"
+                  className="w-full rounded-xl bg-indigo-600 px-5 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-indigo-700 disabled:opacity-50 sm:w-auto sm:py-2 cursor-pointer"
                 >
                   {creating ? 'Creating...' : 'Create Project'}
                 </button>
